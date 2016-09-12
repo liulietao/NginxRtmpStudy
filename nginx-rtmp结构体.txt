@@ -1,0 +1,155 @@
+[ngx_rtmp_live_module.h]
+
+发布流节点带宽统计
+typedef struct {
+    uint64_t            bytes;
+    uint64_t            bandwidth;      /* bytes/sec */
+
+    time_t              intl_end;
+    uint64_t            intl_bytes;
+} ngx_rtmp_bandwidth_t;
+
+nginx实例流量统计
+ngx_rtmp_bandwidth_t        ngx_rtmp_bw_out;
+ngx_rtmp_bandwidth_t        ngx_rtmp_bw_in;
+
+发布流节点状态的记录
+struct ngx_rtmp_live_stream_s {
+    u_char                              name[NGX_RTMP_MAX_NAME];
+    ngx_rtmp_live_stream_t             *next;
+    ngx_rtmp_live_ctx_t                *ctx;
+    ngx_rtmp_bandwidth_t                bw_in;
+    ngx_rtmp_bandwidth_t                bw_in_audio;
+    ngx_rtmp_bandwidth_t                bw_in_video;
+    ngx_rtmp_bandwidth_t                bw_out;
+    ngx_msec_t                          epoch;
+    unsigned                            active:1;
+    unsigned                            publishing:1;
+};
+
+直播模块的上下文
+struct ngx_rtmp_live_ctx_s {
+    ngx_rtmp_session_t                 *session;
+    ngx_rtmp_live_stream_t             *stream;
+    ngx_rtmp_live_ctx_t                *next;
+    ngx_uint_t                          ndropped;
+    ngx_rtmp_live_chunk_stream_t        cs[2];
+    ngx_uint_t                          meta_version;
+    ngx_event_t                         idle_evt;
+    unsigned                            active:1;
+    unsigned                            publishing:1;
+    unsigned                            silent:1;
+    unsigned                            paused:1;
+};
+
+服务器端应用myapp节点下所有发布流节点的哈希表记录
+typedef struct {
+    ngx_int_t                           nbuckets;
+    ngx_rtmp_live_stream_t            **streams;
+    ngx_flag_t                          live;
+    ngx_flag_t                          meta;
+    ngx_msec_t                          sync;
+    ngx_msec_t                          idle_timeout;
+    ngx_flag_t                          atc;
+    ngx_flag_t                          interleave;
+    ngx_flag_t                          wait_key;
+    ngx_flag_t                          wait_video;
+    ngx_flag_t                          publish_notify;
+    ngx_flag_t                          play_restart;
+    ngx_flag_t                          idle_streams;
+    ngx_msec_t                          buflen;
+    ngx_pool_t                         *pool;
+    ngx_rtmp_live_stream_t             *free_streams;
+} ngx_rtmp_live_app_conf_t;
+
+发布流节点请求参数的记录：包括流名字和请求参数
+typedef struct {
+    u_char                          name[NGX_RTMP_MAX_NAME];
+    u_char                          args[NGX_RTMP_MAX_ARGS];
+    u_char                          type[16];
+    int                             silent;
+} ngx_rtmp_publish_t;
+
+[ngx_rtmp.h]
+rtmp session节点 ngx_rtmp_session_t结构体
+typedef struct {
+    uint32_t                signature;  /* "RTMP" */ /* <-- FIXME wtf */
+
+    ngx_event_t             close;
+
+    void                  **ctx;
+    void                  **main_conf;
+    void                  **srv_conf;
+    void                  **app_conf;
+
+    ngx_str_t              *addr_text;
+    int                     connected;
+
+#if (nginx_version >= 1007005)
+    ngx_queue_t             posted_dry_events;
+#else
+    ngx_event_t            *posted_dry_events;
+#endif
+
+    /* client buffer time in msec */
+    uint32_t                buflen;
+    uint32_t                ack_size;
+
+    /* connection parameters */
+    ngx_str_t               app;
+    ngx_str_t               args;
+    ngx_str_t               flashver;
+    ngx_str_t               swf_url;
+    ngx_str_t               tc_url;
+    uint32_t                acodecs;
+    uint32_t                vcodecs;
+    ngx_str_t               page_url;
+
+    /* handshake data */
+    ngx_buf_t              *hs_buf;
+    u_char                 *hs_digest;
+    unsigned                hs_old:1;
+    ngx_uint_t              hs_stage;
+
+    /* connection timestamps */
+    ngx_msec_t              epoch;
+    ngx_msec_t              peer_epoch;
+    ngx_msec_t              base_time;
+    uint32_t                current_time;
+
+    /* ping */
+    ngx_event_t             ping_evt;
+    unsigned                ping_active:1;
+    unsigned                ping_reset:1;
+
+    /* auto-pushed? */
+    unsigned                auto_pushed:1;
+    unsigned                relay:1;
+    unsigned                static_relay:1;
+
+    /* input stream 0 (reserved by RTMP spec)
+     * is used as free chain link */
+
+    ngx_rtmp_stream_t      *in_streams;
+    uint32_t                in_csid;
+    ngx_uint_t              in_chunk_size;
+    ngx_pool_t             *in_pool;
+    uint32_t                in_bytes;
+    uint32_t                in_last_ack;
+
+    ngx_pool_t             *in_old_pool;
+    ngx_int_t               in_chunk_size_changing;
+
+    ngx_connection_t       *connection;
+
+    /* circular buffer of RTMP message pointers */
+    ngx_msec_t              timeout;
+    uint32_t                out_bytes;
+    size_t                  out_pos, out_last;
+    ngx_chain_t            *out_chain;
+    u_char                 *out_bpos;
+    unsigned                out_buffer:1;
+    size_t                  out_queue;
+    size_t                  out_cork;
+    ngx_chain_t            *out[0];
+} ngx_rtmp_session_t;

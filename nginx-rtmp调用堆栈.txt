@@ -1,0 +1,242 @@
+消息处理注册堆栈
+(gdb) bt
+#0  ngx_rtmp_init_event_handlers (cf=0x7fffffffe100, cmcf=0xed0570) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp.c:417
+#1  0x00000000004d8fcb in ngx_rtmp_block (cf=0x7fffffffe100, cmd=0x75a400, conf=0xeac9c0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp.c:302
+#2  0x000000000042ebde in ngx_conf_handler (cf=0x7fffffffe100, last=1) at src/core/ngx_conf_file.c:427
+#3  0x000000000042e71b in ngx_conf_parse (cf=0x7fffffffe100, filename=0xeabbc8) at src/core/ngx_conf_file.c:283
+#4  0x000000000042aeef in ngx_init_cycle (old_cycle=0x7fffffffe240) at src/core/ngx_cycle.c:274
+#5  0x0000000000411544 in main (argc=1, argv=0x7fffffffe588) at src/core/nginx.c:276
+
+编码处理注册堆栈
+(gdb) bt
+#0  ngx_rtmp_codec_postconfiguration (cf=0x7fffffffe100) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_codec_module.c:928
+#1  0x00000000004d8f09 in ngx_rtmp_block (cf=0x7fffffffe100, cmd=0x75a400, conf=0xeac9c0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp.c:294
+#2  0x000000000042ebde in ngx_conf_handler (cf=0x7fffffffe100, last=1) at src/core/ngx_conf_file.c:427
+#3  0x000000000042e71b in ngx_conf_parse (cf=0x7fffffffe100, filename=0xeabbc8) at src/core/ngx_conf_file.c:283
+#4  0x000000000042aeef in ngx_init_cycle (old_cycle=0x7fffffffe240) at src/core/ngx_cycle.c:274
+#5  0x0000000000411544 in main (argc=1, argv=0x7fffffffe588) at src/core/nginx.c:276
+
+建立连接堆栈
+ngx_rtmp_init_session
+ngx_rtmp_cmd_connect_init
+(gdb) bt
+#0  ngx_rtmp_cmd_connect (s=0x19892a0, v=0x774380) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:257
+#1  0x0000000000508041 in ngx_rtmp_notify_connect (s=0x19892a0, v=0x774380) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_notify_module.c:1317
+#2  0x00000000004e5143 in ngx_rtmp_cmd_connect_init (s=0x19892a0, h=0x197ea38, in=0x1980a10) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:191
+#3  0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x19892a0, h=0x197ea38, in=0x1980a10) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#4  0x00000000004de689 in ngx_rtmp_receive_message (s=0x19892a0, h=0x197ea38, in=0x1980a10) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#5  0x00000000004dd67e in ngx_rtmp_recv (rev=0x19b2160) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#6  0x00000000004dc5ec in ngx_rtmp_cycle (s=0x19892a0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:97
+#7  0x00000000004db7de in ngx_rtmp_handshake_done (s=0x19892a0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handshake.c:364
+#8  0x00000000004dbbdf in ngx_rtmp_handshake_recv (rev=0x19b2160) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handshake.c:453
+#9  0x000000000044f647 in ngx_epoll_process_events (cycle=0x197a9e0, timer=60000, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#10 0x000000000043f630 in ngx_process_events_and_timers (cycle=0x197a9e0) at src/event/ngx_event.c:242
+#11 0x000000000044bded in ngx_single_process_cycle (cycle=0x197a9e0) at src/os/unix/ngx_process_cycle.c:309
+#12 0x0000000000411880 in main (argc=1, argv=0x7fffd5266808) at src/core/nginx.c:364
+
+关闭连接堆栈
+ngx_rtmp_cmd_disconnect_init
+(gdb) bt
+#0  ngx_rtmp_cmd_disconnect (s=0x19e2180) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:717
+#1  0x0000000000508145 in ngx_rtmp_notify_disconnect (s=0x19e2180) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_notify_module.c:1350
+#2  0x00000000004e5f2c in ngx_rtmp_cmd_disconnect_init (s=0x19e2180, h=0x0, in=0x0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:710
+#3  0x00000000004d9f07 in ngx_rtmp_fire_event (s=0x19e2180, evt=24, h=0x0, in=0x0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp.c:815
+#4  0x00000000004da7b5 in ngx_rtmp_close_session_handler (e=0x19e2188) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_init.c:283
+#5  0x0000000000441c69 in ngx_event_process_posted (cycle=0x197a9e0, posted=0xe7da30) at src/event/ngx_event_posted.c:33
+#6  0x000000000043f6c3 in ngx_process_events_and_timers (cycle=0x197a9e0) at src/event/ngx_event.c:259
+#7  0x000000000044bded in ngx_single_process_cycle (cycle=0x197a9e0) at src/os/unix/ngx_process_cycle.c:309
+#8  0x0000000000411880 in main (argc=1, argv=0x7fffd5266808) at src/core/nginx.c:364
+
+创建流堆栈
+ngx_rtmp_cmd_create_stream_init
+(gdb) bt
+#0  ngx_rtmp_cmd_create_stream (s=0x1a14160, v=0x774360) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:379
+#1  0x00000000004e57d2 in ngx_rtmp_cmd_create_stream_init (s=0x1a14160, h=0x19e2158, in=0x1989230) at/home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:348
+#2  0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x1a14160, h=0x19e2158, in=0x1989230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#3  0x00000000004de689 in ngx_rtmp_receive_message (s=0x1a14160, h=0x19e2158, in=0x1989230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#4  0x00000000004dd67e in ngx_rtmp_recv (rev=0x19b2160) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#5  0x000000000044f647 in ngx_epoll_process_events (cycle=0x197a9e0, timer=29752, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#6  0x000000000043f630 in ngx_process_events_and_timers (cycle=0x197a9e0) at src/event/ngx_event.c:242
+#7  0x000000000044bded in ngx_single_process_cycle (cycle=0x197a9e0) at src/os/unix/ngx_process_cycle.c:309
+#8  0x0000000000411880 in main (argc=1, argv=0x7fffd5266808) at src/core/nginx.c:364
+(gdb) bt
+#0  ngx_rtmp_live_get_stream (s=0x2c392b0, name=0x774120 "1", create=1) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_live_module.c:228
+#1  0x00000000004ec4e4 in ngx_rtmp_live_join (s=0x2c392b0, name=0x774120 "1", publisher=1) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_live_module.c:517
+#2  0x00000000004edc2a in ngx_rtmp_live_publish (s=0x2c392b0, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_live_module.c:1058
+#3  0x00000000004fee2d in ngx_rtmp_relay_publish (s=0x2c392b0, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_relay_module.c:703
+#4  0x0000000000502f46 in ngx_rtmp_exec_publish (s=0x2c392b0, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_exec_module.c:1190
+#5  0x00000000005082a5 in ngx_rtmp_notify_publish (s=0x2c392b0, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_notify_module.c:1392
+#6  0x0000000000509f08 in ngx_rtmp_log_publish (s=0x2c392b0, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_log_module.c:849
+#7  0x000000000050e8c4 in ngx_rtmp_hls_publish (s=0x2c392b0, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/hls/ngx_rtmp_hls_module.c:1473
+#8  0x0000000000513b0d in ngx_rtmp_dash_publish (s=0x2c392b0, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/dash/ngx_rtmp_dash_module.c:962
+#9  0x00000000004e5b4c in ngx_rtmp_cmd_publish_init (s=0x2c392b0, h=0x2c2ea70,  in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:521
+#10 0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x2c392b0,  h=0x2c2ea70, in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#11 0x00000000004de689 in ngx_rtmp_receive_message (s=0x2c392b0, h=0x2c2ea70,  in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#12 0x00000000004dd67e in ngx_rtmp_recv (rev=0x2c62170) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#13 0x000000000044f647 in ngx_epoll_process_events (cycle=0x2c2a9f0,  timer=29710, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#14 0x000000000043f630 in ngx_process_events_and_timers (cycle=0x2c2a9f0) at src/event/ngx_event.c:242
+#15 0x000000000044bded in ngx_single_process_cycle (cycle=0x2c2a9f0) at src/os/unix/ngx_process_cycle.c:309
+#16 0x0000000000411880 in main (argc=1, argv=0x7fff47b26718) at src/core/nginx.c:364
+
+关闭流堆栈
+ngx_rtmp_cmd_close_stream_init
+ngx_rtmp_cmd_close_stream
+(gdb) bt
+#0  ngx_rtmp_cmd_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:421
+#1  0x00000000004ea0a8 in ngx_rtmp_record_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_record_module.c:867
+#2  0x00000000004ecb18 in ngx_rtmp_live_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_live_module.c:647
+#3  0x00000000004ef807 in ngx_rtmp_play_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_play_module.c:573
+#4  0x0000000000500264 in ngx_rtmp_relay_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_relay_module.c:1424
+#5  0x00000000005033c5 in ngx_rtmp_exec_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_exec_module.c:1301
+#6  0x000000000050855a in ngx_rtmp_notify_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_notify_module.c:1480
+#7  0x000000000050e9b1 in ngx_rtmp_hls_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/hls/ngx_rtmp_hls_module.c:1497
+#8  0x0000000000513bfa in ngx_rtmp_dash_close_stream (s=0x1a14160, v=0x7fffd5266090) at /home/jack/nginx-rtmp-module-1.1.7/dash/ngx_rtmp_dash_module.c:986
+#9  0x00000000004e59e4 in ngx_rtmp_cmd_delete_stream (s=0x1a14160, v=0x774338) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:465
+#10 0x0000000000500299 in ngx_rtmp_relay_delete_stream (s=0x1a14160, v=0x774338) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_relay_module.c:1433
+#11 0x00000000004e596a in ngx_rtmp_cmd_delete_stream_init (s=0x1a14160, h=0x19e2158, in=0x1989230) at/home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:452
+#12 0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x1a14160, h=0x19e2158, in=0x1989230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#13 0x00000000004de689 in ngx_rtmp_receive_message (s=0x1a14160, h=0x19e2158, in=0x1989230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#14 0x00000000004dd67e in ngx_rtmp_recv (rev=0x19b2160) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#15 0x000000000044f647 in ngx_epoll_process_events (cycle=0x197a9e0, timer=25337, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#16 0x000000000043f630 in ngx_process_events_and_timers (cycle=0x197a9e0) at src/event/ngx_event.c:242
+#17 0x000000000044bded in ngx_single_process_cycle (cycle=0x197a9e0) at src/os/unix/ngx_process_cycle.c:309
+#18 0x0000000000411880 in main (argc=1, argv=0x7fffd5266808) at src/core/nginx.c:364
+
+删除流堆栈
+ngx_rtmp_cmd_delete_stream_init
+ngx_rtmp_cmd_delete_stream
+(gdb) bt
+#0  ngx_rtmp_cmd_delete_stream (s=0x2c392b0, v=0x774338) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:461
+#1  0x0000000000500299 in ngx_rtmp_relay_delete_stream (s=0x2c392b0, v=0x774338) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_relay_module.c:1433
+#2  0x00000000004e596a in ngx_rtmp_cmd_delete_stream_init (s=0x2c392b0,  h=0x2c2ea48, in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:452
+#3  0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x2c392b0, h=0x2c2ea48, in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#4  0x00000000004de689 in ngx_rtmp_receive_message (s=0x2c392b0, h=0x2c2ea48, in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#5  0x00000000004dd67e in ngx_rtmp_recv (rev=0x2c62170) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#6  0x000000000044f647 in ngx_epoll_process_events (cycle=0x2c2a9f0, timer=29710, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#7  0x000000000043f630 in ngx_process_events_and_timers (cycle=0x2c2a9f0) at src/event/ngx_event.c:242
+#8  0x000000000044bded in ngx_single_process_cycle (cycle=0x2c2a9f0) at src/os/unix/ngx_process_cycle.c:309
+#9  0x0000000000411880 in main (argc=1, argv=0x7fff47b26718) at src/core/nginx.c:364
+
+发布流堆栈
+ngx_rtmp_cmd_publish_init
+ngx_rtmp_cmd_publish
+(gdb) bt
+#0  ngx_rtmp_cmd_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:528
+#1  0x00000000004e82bf in ngx_rtmp_access_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_access_module.c:445
+#2  0x00000000004e9c5f in ngx_rtmp_record_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_record_module.c:746
+#3  0x00000000004edcd3 in ngx_rtmp_live_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_live_module.c:1073
+#4  0x00000000004fee2d in ngx_rtmp_relay_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_relay_module.c:703
+#5  0x0000000000502f46 in ngx_rtmp_exec_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_exec_module.c:1190
+#6  0x00000000005082a5 in ngx_rtmp_notify_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_notify_module.c:1392
+#7  0x0000000000509f08 in ngx_rtmp_log_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_log_module.c:849
+#8  0x000000000050e8c4 in ngx_rtmp_hls_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/hls/ngx_rtmp_hls_module.c:1473
+#9  0x0000000000513b0d in ngx_rtmp_dash_publish (s=0x1a14160, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/dash/ngx_rtmp_dash_module.c:962
+#10 0x00000000004e5b4c in ngx_rtmp_cmd_publish_init (s=0x1a14160, h=0x19e2180, in=0x1989230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:521
+#11 0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x1a14160, h=0x19e2180, in=0x1989230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#12 0x00000000004de689 in ngx_rtmp_receive_message (s=0x1a14160, h=0x19e2180, in=0x1989230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#13 0x00000000004dd67e in ngx_rtmp_recv (rev=0x19b2160) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#14 0x000000000044f647 in ngx_epoll_process_events (cycle=0x197a9e0, timer=29712, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#15 0x000000000043f630 in ngx_process_events_and_timers (cycle=0x197a9e0) at src/event/ngx_event.c:242
+#16 0x000000000044bded in ngx_single_process_cycle (cycle=0x197a9e0) at src/os/unix/ngx_process_cycle.c:309
+#17 0x0000000000411880 in main (argc=1, argv=0x7fffd5266808) at src/core/nginx.c:364
+
+发布流审核提交堆栈
+ngx_rtmp_notify_publish
+(gdb) bt
+#0  ngx_rtmp_netcall_send (wev=0x2099720) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_netcall_module.c:491
+#1  0x00000000004f893a in ngx_rtmp_netcall_create (s=0x204da60, ci=0x7fff55b3d8a0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_netcall_module.c:276
+#2  0x0000000000508285 in ngx_rtmp_notify_publish (s=0x204da60, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_notify_module.c:1389
+#3  0x0000000000509f08 in ngx_rtmp_log_publish (s=0x204da60, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_log_module.c:849
+#4  0x000000000050e8c4 in ngx_rtmp_hls_publish (s=0x204da60, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/hls/ngx_rtmp_hls_module.c:1473
+#5  0x0000000000513b0d in ngx_rtmp_dash_publish (s=0x204da60, v=0x774120) at /home/jack/nginx-rtmp-module-1.1.7/dash/ngx_rtmp_dash_module.c:962
+#6  0x00000000004e5b4c in ngx_rtmp_cmd_publish_init (s=0x204da60, h=0x20eb7f0, in=0x2058230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:521
+#7  0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x204da60, h=0x20eb7f0, in=0x2058230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#8  0x00000000004de689 in ngx_rtmp_receive_message (s=0x204da60, h=0x20eb7f0, in=0x2058230) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#9  0x00000000004dd67e in ngx_rtmp_recv (rev=0x20816b0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#10 0x000000000044f647 in ngx_epoll_process_events (cycle=0x20499e0, timer=29718, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#11 0x000000000043f630 in ngx_process_events_and_timers (cycle=0x20499e0) at src/event/ngx_event.c:242
+#12 0x000000000044bded in ngx_single_process_cycle (cycle=0x20499e0) at src/os/unix/ngx_process_cycle.c:309
+#13 0x0000000000411880 in main (argc=1, argv=0x7fff55b3e198) at src/core/nginx.c:364
+
+发布流审核处理堆栈
+ngx_rtmp_notify_publish_handle
+(gdb) bt
+#0  ngx_rtmp_cmd_publish (s=0x20b1670, v=0x204dad8) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:528
+#1  0x00000000004e82bf in ngx_rtmp_access_publish (s=0x20b1670, v=0x204dad8) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_access_module.c:445
+#2  0x00000000004e9c5f in ngx_rtmp_record_publish (s=0x20b1670, v=0x204dad8) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_record_module.c:746
+#3  0x00000000004edcd3 in ngx_rtmp_live_publish (s=0x20b1670, v=0x204dad8) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_live_module.c:1073
+#4  0x00000000004fee2d in ngx_rtmp_relay_publish (s=0x20b1670, v=0x204dad8) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_relay_module.c:703
+#5  0x0000000000502f46 in ngx_rtmp_exec_publish (s=0x20b1670, v=0x204dad8) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_exec_module.c:1190
+#6  0x000000000050769f in ngx_rtmp_notify_publish_handle (s=0x20b1670, arg=0x204dad8, in=0x204e0c8) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_notify_module.c:1078
+#7  0x00000000004f8ae5 in ngx_rtmp_netcall_close (cc=0x7f460e747390) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_netcall_module.c:325
+#8  0x00000000004f8dae in ngx_rtmp_netcall_recv (rev=0x2081710) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_netcall_module.c:418
+#9  0x000000000044f647 in ngx_epoll_process_events (cycle=0x20499e0, timer=5000, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#10 0x000000000043f630 in ngx_process_events_and_timers (cycle=0x20499e0) at src/event/ngx_event.c:242
+#11 0x000000000044bded in ngx_single_process_cycle (cycle=0x20499e0) at src/os/unix/ngx_process_cycle.c:309
+#12 0x0000000000411880 in main (argc=1, argv=0x7fff55b3e198) at src/core/nginx.c:364
+
+发布流审核处理日志分析
+2016/06/28 14:58:49 [debug] 4375#0: worker cycle
+2016/06/28 14:58:49 [debug] 4375#0: epoll timer: 5000
+2016/06/28 14:58:49 [debug] 4375#0: epoll: fd:10 ev:2001 d:00007F460E747391
+2016/06/28 14:58:49 [debug] 4375#0: event timer del: 10: 1467097139350
+2016/06/28 14:58:49 [debug] 4375#0: recv: fd:10 161 of 1024
+2016/06/28 14:58:49 [debug] 4375#0: recv: fd:10 0 of 863
+2016/06/28 14:58:49 [debug] 4375#0: *32 notify: HTTP retcode: 2xx [ngx_rtmp_notify_parse_http_retcode]
+2016/06/28 14:58:49 [debug] 4375#0: *32 live: publish: name='1' type='live' [ngx_rtmp_live_publish]
+2016/06/28 14:58:49 [debug] 4375#0: *32 live: join '1' [ngx_rtmp_live_join]
+2016/06/28 14:58:49 [debug] 4375#0: *32 live: create stream '1' [ngx_rtmp_live_get_stream]
+2016/06/28 14:58:49 [debug] 4375#0: *32 create: status code='NetStream.Publish.Start' level='status' desc='Start publishing' [ngx_rtmp_create_status]
+
+播放流堆栈
+ngx_rtmp_cmd_play
+ngx_rtmp_cmd_play2_init
+(gdb) bt
+#0  ngx_rtmp_cmd_play (s=0x19f14e0, v=0x773f00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:589
+#1  0x00000000004e8307 in ngx_rtmp_access_play (s=0x19f14e0, v=0x773f00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_access_module.c:456
+#2  0x00000000004ede8c in ngx_rtmp_live_play (s=0x19f14e0, v=0x773f00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_live_module.c:1112
+#3  0x00000000004f01b7 in ngx_rtmp_play_play (s=0x19f14e0, v=0x773f00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_play_module.c:806
+#4  0x00000000004ff026 in ngx_rtmp_relay_play (s=0x19f14e0, v=0x773f00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_relay_module.c:751
+#5  0x000000000050308d in ngx_rtmp_exec_play (s=0x19f14e0, v=0x773f00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_exec_module.c:1227
+#6  0x0000000000508409 in ngx_rtmp_notify_play (s=0x19f14e0, v=0x773f00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_notify_module.c:1434
+#7  0x0000000000509f8d in ngx_rtmp_log_play (s=0x19f14e0, v=0x773f00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_log_module.c:870
+#8  0x00000000004e5c6f in ngx_rtmp_cmd_play_init (s=0x19f14e0, h=0x19f2590, in=0x19f3490) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_cmd_module.c:582
+#9  0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x19f14e0, h=0x19f2590, in=0x19f3490) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#10 0x00000000004de689 in ngx_rtmp_receive_message (s=0x19f14e0, h=0x19f2590, in=0x19f3490) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#11 0x00000000004dd67e in ngx_rtmp_recv (rev=0x19b21c0) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#12 0x000000000044f647 in ngx_epoll_process_events (cycle=0x197a9e0, timer=20938, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#13 0x000000000043f630 in ngx_process_events_and_timers (cycle=0x197a9e0) at src/event/ngx_event.c:242
+#14 0x000000000044bded in ngx_single_process_cycle (cycle=0x197a9e0) at src/os/unix/ngx_process_cycle.c:309
+#15 0x0000000000411880 in main (argc=1, argv=0x7fffd5266808) at src/core/nginx.c:364
+
+定位流堆栈
+ngx_rtmp_cmd_seek_init
+
+暂停流堆栈
+ngx_rtmp_cmd_pause_init
+
+编码解析堆栈
+ngx_rtmp_codec_meta_data
+(gdb) bt
+#0  ngx_rtmp_codec_meta_data (s=0x2c392b0, h=0x2c2ea48, in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_codec_module.c:832
+#1  0x00000000004e38bd in ngx_rtmp_amf_message_handler (s=0x2c392b0, h=0x2c2ea48, in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_receive.c:437
+#2  0x00000000004de689 in ngx_rtmp_receive_message (s=0x2c392b0, h=0x2c2ea48, in=0x2c92120) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#3  0x00000000004dd67e in ngx_rtmp_recv (rev=0x2c62170) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#4  0x000000000044f647 in ngx_epoll_process_events (cycle=0x2c2a9f0, timer=29748, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#5  0x000000000043f630 in ngx_process_events_and_timers (cycle=0x2c2a9f0) at src/event/ngx_event.c:242
+#6  0x000000000044bded in ngx_single_process_cycle (cycle=0x2c2a9f0) at src/os/unix/ngx_process_cycle.c:309
+#7  0x0000000000411880 in main (argc=1, argv=0x7fff47b26718) at src/core/nginx.c:364
+
+音视频流数据接收堆栈
+ngx_rtmp_live_av
+(gdb) bt
+#0  ngx_rtmp_live_av (s=0x2393290, h=0x2388a78, in=0x238aa00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_live_module.c:717
+#1  0x00000000004de709 in ngx_rtmp_receive_message (s=0x2393290, h=0x2388a78, in=0x238aa00) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:799
+#2  0x00000000004dd6fe in ngx_rtmp_recv (rev=0x23bc640) at /home/jack/nginx-rtmp-module-1.1.7/ngx_rtmp_handler.c:464
+#3  0x000000000044f6c7 in ngx_epoll_process_events (cycle=0x23849d0, timer=995, flags=1) at src/event/modules/ngx_epoll_module.c:822
+#4  0x000000000043f6b0 in ngx_process_events_and_timers (cycle=0x23849d0) at src/event/ngx_event.c:242
+#5  0x000000000044be6d in ngx_single_process_cycle (cycle=0x23849d0) at src/os/unix/ngx_process_cycle.c:309
+#6  0x0000000000411900 in main (argc=1, argv=0x7fff565e7d28) at src/core/nginx.c:364
+
+流统计堆栈
+ngx_rtmp_stat_handler
